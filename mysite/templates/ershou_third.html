@@ -1,0 +1,76 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 1200px;height: 600px;">
+        <div style="width: 1200px;height: 50px;" class="subject">组合图</div>
+        <div style="width: 1200px;height: 550px;" class="content" id="chart">
+          <script>
+            var mychart = echarts.init(document.getElementById('chart'));
+            mychart.setOption({
+              color: ['#FFCC00', '#3399FF'],
+              title: { text: '不同装修房源数量和每平米均价的对比', left: 'center' },
+              toolbox: {
+                feature: {
+                  dataView: { show: true, readOnly: false },
+                  restore: { show: true },
+                  saveAsImage: { show: true }
+                }
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              legend: { data: ['数量', '每平米均价'],left:'left' },
+              xAxis: [{
+                type: 'category',
+                axisTick: { alignWithLabel: true },
+                data: {{ dectype| safe}}
+         }],
+              yAxis: [{
+                type: 'value',
+                name: '数量',
+                min: 0,
+                max: 1700,
+                position: 'left',
+                axisLine:{show:true},
+                axisLabel: { formatter: '{value}(个)' }
+              },
+              {
+                type: 'value',
+                name: '每平米均价（元）',
+                min: 0,
+                max: 25000,
+                position: 'right',
+                axisLine:{show:true},
+                axisLabel: { formatter: '{value}（元）' }
+              }
+            ],
+              series: [{
+                name: '数量',
+                type: 'bar',
+                label:{show:true,position:'top'},
+                data: {{ deccount| safe}}
+        },
+              {
+                name: '每平米均价',
+                type: 'line',
+                data: {{ avgprice| safe}},
+                label:{show:true,position:'bottom',color:'blue'},
+              yAxisIndex: 1
+      }
+            ]
+      });
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

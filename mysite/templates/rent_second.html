@@ -1,0 +1,220 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="% static 'json/珠海市.json' %"></script>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 580px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>柱状图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart1">
+          <script>
+            var chart1 = echarts.init(document.getElementById('chart1'));
+            chart1.setOption({
+              color: ['#6633CC'],
+              title: { text: '不同镇区的房源平均价格', left: 'center' },
+              tooltip: { show: true, trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{a}<br>{b}:{c}元' },
+              xAxis: {
+                name: '（元）',
+                type: 'category',
+                data: {{ town| safe}},
+              axisLabel: { interval: 0, rotate: 60, margin: 9 }
+          },
+              yAxis: { type: 'value' },
+              series: [{
+                name: '平均价格',
+                data: {{ avgprice| safe}},
+              type: 'bar',
+              showBackground: true,
+              backgroundStyle: { color: 'rgba(180, 180, 180, 0.2)' }
+          }]
+        });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 580px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>气泡图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart2">
+          <script>
+            $.getJSON('../static/json/珠海市.json', function (zhuhaiJson) {
+              echarts.registerMap('zhuhai', zhuhaiJson);//echarts内置函数registerMap注册地图
+              setChar();//调用函数        
+            });
+            function setChar(){ //该函数请求json数据画图
+              $.getJSON('/towncount/', function (datas) {
+                console.log('请求成功！');
+                qipaodata = []
+                $.each(datas, function (i, item) {
+                  qipaodata.push({ name: item.name, value: item.value });
+                })
+                var data = qipaodata;
+                var geoCoordMap = {
+                  '井岸镇': [113.305061, 22.205181],
+                  '兰埔': [113.545775, 22.246152],
+                  '南湾': [113.991005, 22.059974],
+                  '吉大': [113.581368, 22.250243],
+                  '唐家湾镇': [113.546596, 22.386598],
+                  '夏湾': [113.544419, 22.229538],
+                  '拱北': [113.552959, 22.233503],
+                  '横琴': [113.541667, 22.127299],
+                  '洪湾': [113.469257, 22.171309],
+                  '湾仔': [113.540421, 22.197253],
+                  '白蕉镇': [113.344361, 22.261023],
+                  '红旗镇': [113.352134, 22.144778]
+                }
+                var convertData = function (data) {
+                  var res = [];
+                  for (var i = 0; i < data.length; i++) {
+                    var geoCoord = geoCoordMap[data[i].name]
+                    if (geoCoord) {
+                      res.push({
+                        name: data[i].name,
+                        value: geoCoord.concat(data[i].value)
+                      })
+                    }
+                  }
+                  return res;
+                  console.log(res)
+                }
+                var max = 100;
+                data.forEach(function (itemOpt) {
+                  if (itemOpt.value > max) {
+                    max = itemOpt.value;
+                  }
+                });
+                var chart2 = echarts.init(document.getElementById('chart2'));
+                chart2.setOption({
+                  title: { text: '不同镇区房源数量分布', left: 'center' },
+                  tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}<br>{c}'
+                  },
+                  geo: {
+                    type: 'map',
+                    map: 'zhuhai',
+                    roam: true,
+                    itemStyle: {
+                      normal: {
+                        areaColor: '#efefef',
+                        borderColor: '#fff'
+                      },
+                      emphasis: {
+                        areaColor: '#cccccc'
+                      }
+                    }
+                  },
+                  visualMap: {
+                    show: false,
+                    min: 0,
+                    max: max,
+                    inRange: {
+                      symbolSize: [6, 40]
+                    }
+                  },
+                  series: [{
+                    name: '房源数量',
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    data: convertData(data),
+                    label: {
+                      normal: { show: false },
+                      emphasis: { show: true }
+                    },
+                    itemStyle: { normal: { color: '#8e7bff' } },
+
+                  }]
+                });
+              });
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 580px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>柱状图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart3">
+          <script>
+            chart3 = echarts.init(document.getElementById('chart3'));
+            chart3.setOption({
+              color: ['#66FF99'],
+              title: { text: '不同镇区的房源最低价格', left: 'center' },
+              tooltip: { show: true, trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{a}<br>{b}:{c}元' },
+              xAxis: {
+                name: '（元）',
+                type: 'category',
+                data: {{ towns| safe}},
+              axisLabel: { interval: 0, rotate: 60, margin: 9 }
+          },
+              yAxis: { type: 'value' },
+              series: [{
+                name: '最低价格',
+                data: {{ lowerprice| safe}},
+              type: 'bar',
+              showBackground: true,
+              backgroundStyle: { color: 'rgba(180, 180, 180, 0.2)' }
+          }]
+        });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 580px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>柱状图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart4">
+          <script>
+            chart4 = echarts.init(document.getElementById('chart4'));
+            chart4.setOption({
+              color: ['#FF6600'],
+              title: { text: '不同镇区的房源最高价格', left: 'center' },
+              tooltip: { show: true, trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: '{a}<br>{b}:{c}元' },
+              xAxis: {
+                name: '（元）',
+                type: 'category',
+                data: {{ atown| safe}},
+              axisLabel: { interval: 0, rotate: 60, margin: 9 }
+          },
+              yAxis: { type: 'value' },
+              label: { show: true, position: 'top' },
+              series: [{
+                name: '最高价格',
+                data: {{ higherprice| safe}},
+              type: 'bar',
+              showBackground: true,
+              backgroundStyle: { color: 'rgba(180, 180, 180, 0.2)' }
+          }]
+        });
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+</div>
+{% endblock %}

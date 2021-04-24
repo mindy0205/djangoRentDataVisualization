@@ -1,0 +1,106 @@
+{% extends 'original.html' %}
+
+{% block body %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">{% block pro_name %}Data Visualization{% endblock %}</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">About</a></li>
+
+      </ul>
+
+    </div>
+  </div></nav>
+  <div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <div class="panel-group table-responsive classify" role="tablist">
+        <div class="panel panel-primary leftMenu">
+          <!-- 利用data-target指定要折叠的分组列表 -->
+          <div class="panel-heading" id="collapseListGroupHeading1" data-toggle="collapse"
+               data-target="#collapseListGroup3" role="tab">
+            <h4 class="panel-title">
+              二手房
+              <span class="glyphicon glyphicon-chevron-up right"></span>
+            </h4>
+          </div>
+          <!-- .panel-collapse和.collapse标明折叠元素 .in表示要显示出来 -->
+          <div id="collapseListGroup3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1">
+            <ul class="list-group">
+               <li class="list-group-item">
+                <a href="{% url 'link' %}">首页</a>
+              </li>
+              <li class="list-group-item">
+                <a href="{% url 'ershou:ershou_first' %}">户型分布.楼层分布.户型关注度.标题文本词云图</a>
+              </li> 
+               <li class="list-group-item">
+                <a href="{% url 'ershou:ershou_second' %}">不同小区统计</a>
+              </li>
+               <li class="list-group-item">
+                <a href="{% url 'ershou:ershou_third' %}">不同装修房源统计</a>
+              </li>
+               <li class="list-group-item">
+                <a href="{% url 'ershou:ershou_fourth' %}">房源总价和面积关系.不同镇区房源平均价格.不同价格区间房源数</a>
+              </li>
+            </ul>
+          </div>
+        </div><!--panel end-->
+
+
+         <div class="panel-group table-responsive classify" role="tablist">
+        <div class="panel panel-primary leftMenu">
+          <!-- 利用data-target指定要折叠的分组列表 -->
+          <div class="panel-heading" id="collapseListGroupHeading1" data-toggle="collapse"
+               data-target="#collapseListGroup2" role="tab">
+            <h4 class="panel-title">
+              租房
+              <span class="glyphicon glyphicon-chevron-up right"></span>
+            </h4>
+          </div>
+          <!-- .panel-collapse和.collapse标明折叠元素 .in表示要显示出来 -->
+          <div id="collapseListGroup2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <a href="{% url 'rent:rent_first' %}">租房方式占比.户型分布.面积分布</a>
+              </li>
+               <li class="list-group-item">
+                <a href="{% url 'rent:rent_second' %}">不同镇区统计</a>
+              </li>
+               <li class="list-group-item">
+                <a href="{% url 'rent:rent_third' %}">不同行政区统计</a>
+              </li>
+               <li class="list-group-item">
+                <a href="{% url 'rent:rent_fourth' %}">设施情况</a>
+              </li>
+            </ul>
+          </div>
+        </div><!--panel end-->
+
+        
+        
+        </div>
+      </div>
+    </div>
+   {% block content %}
+   {% endblock %}
+  </div>
+</div>
+  {% endblock %}
+<script>
+  $(function () {
+  $(".panel-heading").click(function (e) {
+    /*切换折叠指示图标*/
+    $(this).find("span").toggleClass("glyphicon-chevron-down");
+    $(this).find("span").toggleClass("glyphicon-chevron-up");
+  });
+});
+</script>

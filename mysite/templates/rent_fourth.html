@@ -1,0 +1,153 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px; height:50px;" class="subject">饼图</div>
+      <div style="width: 550px;height: 580px;" class="content" id="chart1">
+        <script>
+          var chart1 = echarts.init(document.getElementById('chart1'));
+          $.getJSON('/dt/', function (datas) {
+            dtlist = []
+            console.log(datas)
+            $.each(datas, function (i, item) {
+              dtlist.push({ name: item.name, value: item.value },)
+            });
+            console.log(dtlist)
+            chart1.setOption({
+              title: {
+                text: '电梯情况',
+                left: 'center',
+                top:'80px'
+              },
+              tooltip: {
+                trigger: 'item',formatter:'{a} <br/>{b} : {c} ({d}%)'
+              },
+              legend: {
+                orient: 'vertical',
+                left: 'left',
+                top:'200px',
+                left:'50px'
+              },
+              series: [
+                {
+                  name: '电梯',
+                  type: 'pie',
+                  radius: '50%',
+                  data: dtlist,
+                  emphasis: {
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  }
+                }
+              ]
+            })
+          })
+        </script>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div style="width: 550px; height:50px;" class="subject">饼图</div>
+      <div style="width: 550px;height: 580px;" class="content" id="chart2">
+      <script>
+        var chart2=echarts.init(document.getElementById('chart2'));
+        $.getJSON('/water/',function(datas){
+          console.log(datas)
+          waterlist=[]
+          $.each(datas, function (i, item) {
+              waterlist.push({ name: item.name, value: item.value },)
+            });
+          chart2.setOption({
+            title: {
+                text: '用水情况',
+                left: 'center',
+                top:'80px'
+              },
+              tooltip: {
+                trigger: 'item',formatter:'{a} <br/>{b} : {c} ({d}%)'
+              },
+              legend: {
+                orient: 'vertical',
+                left: 'left',
+                top:'200px',
+                left:'30px'
+              },
+              series: [
+                {
+                  name: '用水情况',
+                  type: 'pie',
+                  radius: '50%',
+                  data: waterlist,
+                  emphasis: {
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  }
+                }
+              ]
+          })
+        })
+      </script>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px; height: 50px;" class="subject">饼图</div>
+      <div style="width: 550px;height: 580px;" class="content" id="chart3">
+      <script>
+        var chart3=echarts.init(document.getElementById('chart3'));
+        $.getJSON('/ranqi/',function(datas){
+          console.log(datas)
+          ranqilist=[]
+          $.each(datas, function (i, item) {
+              ranqilist.push({ name: item.name, value: item.value },)
+            });
+          chart3.setOption({
+            title: {
+                text: '燃气情况',
+                left: 'center',
+                top:'80px'
+              },
+              tooltip: {
+                trigger: 'item',formatter:'{a} <br/>{b} : {c} ({d}%)'
+              },
+              legend: {
+                orient: 'vertical',
+                left: 'left',
+                top:'200px',
+                left:'30px'
+              },
+              series: [
+                {
+                  name: '燃气情况',
+                  type: 'pie',
+                  radius: '50%',
+                  data: ranqilist,
+                  emphasis: {
+                    itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  }
+                }
+              ]
+          })
+        })
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

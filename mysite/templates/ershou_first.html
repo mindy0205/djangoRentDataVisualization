@@ -1,0 +1,174 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script src="{% static  'js/echarts-wordcloud.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="row">
+  <div class="col-sm-6">
+      <div style="width: 550px;height:580px;">
+      <div style="width: 550px;height:50px;" class="subject"><h5>饼图</h5></div>
+      <div style="width: 550px;height:500px;" class="content" id="chart1">
+        <script>
+          var myChart1=echarts.init(document.getElementById('chart1'));
+          $.getJSON('/ershou_huxing/',function(datas){
+           console.log("请求成功！");
+           piedata=[]
+           $.each(datas,function(i,item){
+            piedata.push({name:item.name,value:item.value},)
+           })
+           console.log(piedata)        
+            myChart1.setOption({
+            color:['orange','gold','royalblue','steelblue','turquoise','lime'],  
+            title:{
+              text:'户型分布',
+              left:'center'
+            },
+            tooltip:{trigger:'item',formatter:'"{a} <br/>{b} : {c} ({d}%)'},
+            legend:{orient:'vertical',left:'left'},
+            series:[
+            {
+              name:'户型数量',
+              type:'pie',
+              radius:'50%',
+              data:piedata,
+              emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+            }
+            ]
+          }
+            )
+          });
+
+        </script>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+      <div style="width: 550px;height:580px;">
+      <div style="width: 550px;height:50px;" class="subject"><h5>柱状图</h5></div>
+      <div style="width: 550px;height:500px;" class="content" id="chart2">
+      <script>
+        var chart2=echarts.init(document.getElementById('chart2'));
+           chart2.setOption({
+              title:{text:'楼层分布',left:'center',},
+              tooltip:{trigger:'axis'},
+              legend:{data:['数量'],left:'left'},
+              xAxis:{data:{{floor|safe}},axisLabel:{interval:0,rotate:90}},
+              yAxis:{},
+              series:[{
+                name:'数量',
+                type:'bar',
+                data:{{floorcount|safe}},
+                itemStyle:{color:'royalblue'},
+                markPoint:{
+                data:[
+                    {type:'max',name:'最大值'},
+                    {type:'min',name:'最小值',symbol:'pin'}
+                ]
+            },
+              }]
+            
+            });
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+     <div style="width: 550px;height:560px;">
+      <div style="width: 550px;height:50px;" class="subject"><h5>玫瑰图</h5></div>
+      <div style="width: 550px;height:500px;" class="content" id="chart3">
+        <script>
+          chart3=echarts.init(document.getElementById('chart3'));
+          $.getJSON('/ershou_hxcare/',function(datas){
+            piedata1=[]
+            $.each(datas,function(i,item){
+              piedata1.push({name:item.name,value:item.value})
+            })
+            console.log(piedata1);
+            chart3.setOption({
+              color:['gold','lightgreen','royalblue','skyblue','khaki','coral','MediumPurple'],
+              title:{
+              text:'户型关注度',
+              left:'center'
+            },
+            tooltip:{trigger:'item',formatter:'"{a} <br/>{b} : {c} ({d}%)'},
+            legend:{orient:'vertical',left:'left'},
+            series:[
+            {
+              name:'户型关注度',
+              type:'pie',
+              radius:'50%',
+              data:piedata1,
+              roseType:'angle',
+              emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+            }
+            ]
+            })
+          })
+        </script>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+     <div style="width: 550px;height:560px;">
+      <div style="width: 550px;height:50px;" class="subject"><h5>词云图</h5></div>
+      <div style="width: 550px;height:500px;" class="content" id="chart4">
+      <script>
+        chart4=echarts.init(document.getElementById('chart4'));
+        $.getJSON('/wc/',function(datas){
+          wcdata=[]
+          $.each(datas,function(i,item){
+            wcdata.push({name:item.name,value:item.value})
+          })
+          chart4.setOption({
+            title:{
+              text:'标题文本词云图',
+              left:'center'
+            },
+            tooltip:{show:true},
+            series:[{
+              name:'标题分析',
+              type:'wordCloud',
+              sizeRange:[9,60],//设置字符大小范围
+              width: '90%',
+              height: '80%',
+              shape:'star',
+              rotationRange:[-45,90],
+              rotationStep:45,
+              textRotation:[0,45,90,-45],
+              textStyle:{
+                normal:{
+                  color:'rgb('+[
+                    Math.round(Math.random()*160),
+                    Math.round(Math.random()*160),
+                    Math.round(Math.random()*160)
+                  ].join(',')+')'
+                }
+              },
+              emphasis:{shadowBlur:10,shadowColor:'#333'},
+              data:wcdata
+            }]
+          })
+        })
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

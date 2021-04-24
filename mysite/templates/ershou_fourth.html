@@ -1,0 +1,147 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px;height:580px;">
+        <div style="width: 550px;height: 50px;" class="subject">柱状图</div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart1">
+          <script>
+            var chart1 = echarts.init(document.getElementById('chart1'));
+            chart1.setOption({
+              color: ['#6633CC'],
+              title: { text: '不同镇区的房源平均价格', left: 'center' },
+              tooltip: { show: true, trigger: 'axis', axisPointer: { type: 'shadow' },formatter:'{a}<br>{b}:{c}万' },
+              xAxis: {
+                name: '万（元）',
+                type: 'category',
+                data: {{ town| safe}},
+              axisLabel: { interval: 0, rotate: 60, margin: 9 }
+          },
+              yAxis: { type: 'value' },
+              series: [{
+              name:'平均价格',
+              data: {{ avgprice| safe}},
+              type: 'bar',
+              showBackground: true,
+              backgroundStyle: { color: 'rgba(180, 180, 180, 0.2)' }
+          }]
+        });
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 580px;">
+        <div style="width: 550px;height: 50px;" class="subject">漏斗图</div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart2">
+          <script>
+            var chart2 = echarts.init(document.getElementById('chart2'));
+            $.getJSON('/price_count/', function (datas) {
+              pcdata = []
+              $.each(datas, function (i, item) {
+                pcdata.push({ name: item.name+'万元', value: item.value })
+              })
+              console.log(pcdata)
+              chart2.setOption({
+                title: {
+                  text: '不同总价区间的二手房源数量',
+                  left:'center'
+                },
+                tooltip: {
+                  trigger: 'item',
+                  formatter: "{a} <br/>{b} : {c}"
+                },
+                toolbox: {
+                  feature: {
+                    dataView: { readOnly: false },
+                    restore: {},
+                    saveAsImage: {}
+                  }
+                },
+                series: [
+                  {
+                    name: '二手房源数量',
+                    type: 'funnel',
+                    min: 0,
+                    max: 100,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                      show: true,
+                      position: 'inside'
+                    },
+                    labelLine: {
+                      length: 10,
+                      lineStyle: {
+                        width: 1,
+                        type: 'solid'
+                      }
+                    },
+                    itemStyle: {
+                      borderColor: '#fff',
+                      borderWidth: 1
+                    },
+                    emphasis: {
+                      label: {
+                        fontSize: 20
+                      }
+                    },
+                    data: pcdata
+                  }
+                ]
+              })
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 1200px;height: 600px;">
+        <div style="width: 1200px;height: 50px;" class="subject">散点图</div>
+        <div style="width: 1200px;height: 500px;" class="content" id="chart3">
+        <script>
+          var chart3=echarts.init(document.getElementById('chart3'));
+          $.getJSON('/area_price/',function(data){
+            chart3.setOption({
+              title:{text:'房源总价和面积关系散点图',left:'center'},
+              xAxis:{scale:true,name:'面积（平米）'},
+              yAxis:{scale:true,name:'万（元）'},
+              tooltip:{show:true,trigger:'item',formatter:'{c}'},
+              series:[{
+                type:'effectScatter',
+                symbolSize:20,
+                data:[
+                [457.93, 1500.0], [412.0, 2500.0]
+                ]
+              },
+            {
+              name:'房源总价',
+              type:'scatter',
+              symbolSize:12,
+              data:data,
+            }
+            ]
+            })
+          })
+        </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+{% endblock %}

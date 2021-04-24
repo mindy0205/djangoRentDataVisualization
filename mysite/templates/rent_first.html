@@ -1,0 +1,146 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 550px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>圆环图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart1">
+          <script>
+            var chart1 = echarts.init(document.getElementById('chart1'));
+            $.getJSON('/ren/', function (datas) {
+              piedata = []
+              $.each(datas, function (i, item) {
+                piedata.push({ name: item.name, value: item.value },)
+              });
+              chart1.setOption({
+                title: { text: '不同租房方式占比', left: 'center' },
+                tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c} ({d}%)' },
+                legend: {
+                  top: '5%',
+                  left: 'center'
+                },
+                series: [
+                  {
+                    name: '租房方式',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                      show: false,
+                      position: 'center'
+                    },
+                    emphasis: {
+                      label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                      }
+                    },
+                    labelLine: {
+                      show: false
+                    },
+                    data: piedata
+                  }
+                ]
+              })
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div style="width: 550px;height: 550px;">
+        <div style="width: 550px;height: 50px;" class="subject">
+          <h5>圆环图</h5>
+        </div>
+        <div style="width: 550px;height: 500px;" class="content" id="chart2">
+          <script>
+            var chart2 = echarts.init(document.getElementById('chart2'));
+            $.getJSON('/huxingcount/', function (datas) {
+              piedata1 = []
+              $.each(datas, function (i, item) {
+                piedata1.push({ name: item.name, value: item.value },)
+              });
+              chart2.setOption({
+                title: { text: '不同户型分布', left: 'center' },
+                tooltip: { trigger: 'item', formatter: '"{a} <br/>{b} : {c} ({d}%)' },
+                legend: {
+                  top: '5%',
+                  left: 'center'
+                },
+                series: [
+                  {
+                    name: '户型数量',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                      show: false,
+                      position: 'center'
+                    },
+                    emphasis: {
+                      label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                      }
+                    },
+                    labelLine: {
+                      show: false
+                    },
+                    data: piedata1
+                  }
+                ]
+              })
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 1200px;height: 600px;">
+        <div style="width: 1200px;height: 50px;" class="subject">
+          <h5>条形图</h5>
+        </div>
+        <div style="width: 1200px;height: 550px;" class="content" id="chart3">
+          <script>
+            var chart3 = echarts.init(document.getElementById('chart3'));
+            chart3.setOption({
+              color:['#FFCC33',],
+              title: { text: '房源面积分布区间统计', left: 'center' },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // Use axis to trigger tooltip
+                  type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+                }
+              },
+              xAxis:{type:'value'},
+              yAxis:{name:'建筑面积（㎡)',type:'category',data:{{areas|safe}}},
+              series:[{
+                name:'房源数量',
+                type:'bar',
+                label:{show:true},
+                emphasis: {
+                focus: 'series'
+            },
+            data:{{count|safe}}
+              }]
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="row">
+    <div class="col-sm-6">
+      <div style="width: 1200px;height: 580px;">
+        <div style="width: 1200px;height: 50px;" class="subject">条形图</div>
+        <div style="width: 1200px;height: 530px;" class="content" id="chart">
+          <script>
+            var chart = echarts.init(document.getElementById('chart'));
+            chart.setOption({
+              title: {
+                text: '不同行政区房源的最低最高价格',
+                left:'center'
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow'
+                }
+              },
+              legend: {
+                data: ['最低价', '最高价'],left:'left'
+              },
+              grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+              },
+              xAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01]
+              },
+              yAxis: {
+                type: 'category',
+                data:{{district|safe}}
+              },
+              series: [
+                {
+                  name: '最低价',
+                  type: 'bar',
+                  data: {{lowerprice|safe}},
+                },
+                {
+                  name: '最高价',
+                  type: 'bar',
+                  data: {{higherprice|safe}},
+                  barWidth:'45'
+                }
+              ]
+            })
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
