@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
-        'NAME': 'lianjiarent', # 数据库名称
-        'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1 
+        'NAME': 'mindy0205$lianjia', # 数据库名称
+        'HOST': 'mindy0205.mysql.pythonanywhere-services.com', # 数据库地址，本机 ip 地址 127.0.0.1 
         'PORT': 3306, # 端口 
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': '123', # 数据库密码
+        'PASSWORD': '12345678czt', # 数据库密码
         'OPTIONS':{'charset':'utf8'}
     }
 }
