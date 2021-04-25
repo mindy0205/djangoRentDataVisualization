@@ -78,7 +78,7 @@ DATABASES = {
         'NAME': 'mindy0205$lianjia', # 数据库名称
         'HOST': 'mindy0205.mysql.pythonanywhere-services.com', # 数据库地址，本机 ip 地址 127.0.0.1 
         'PORT': 3306, # 端口 
-        'USER': 'root',  # 数据库用户名
+        'USER': 'mindy0205',  # 数据库用户名
         'PASSWORD': '12345678czt', # 数据库密码
         'OPTIONS':{'charset':'utf8'}
     }
